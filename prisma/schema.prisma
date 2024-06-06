@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int               @id @default(autoincrement())
+  username        String            @unique @db.VarChar(50)
+  password        String            @db.VarChar(50)
+  email           String            @unique
+  phone           String            @unique @db.VarChar(100)
+  warning         Int               @default(0)
+  hosts           Host[]
+  teamInformation TeamInformation[]
+}
+
+model Host {
+  id                    Int               @id @default(autoincrement())
+  platformWithGameId    Int               @map("platform_with_game_id")
+  platformWithGame      PlatformWithGames @relation(fields: [platformWithGameId], references: [id])
+  createdDate           DateTime          @default(now()) @map("created_date") @db.Timestamp(0)
+  updatedDate           DateTime          @updatedAt @map("updated_date") @db.Timestamp(0)
+  teamOrNot             Boolean           @map("team_or_not")
+  teamAmount            Int               @map("team_amount")
+  teamLimit             Int               @default(1) @map("team_limit")
+  prizePool             String            @map("prize_pool") @db.VarChar(100)
+  addressOrOnline       String            @map("address_or_online") @db.Text //@default("Online") << if press online, but if offline have to insert address
+  rules                 String            @db.Text
+  tourPassword          String?           @map("tour_password") @db.VarChar(100) // If Null = Public, Not Null = Private, need password to join room
+  startTour             DateTime          @map("start_tour")
+  endTour               DateTime          @map("end_tour")
+  registrationStartDate DateTime          @map("registration_start_date")
+  registrationEndDate   DateTime          @map("registration_end_date")
+  deletedAt             DateTime?         @map("deleted_at")
+  hostId                Int               @map("host_id")
+  user                  User              @relation(fields: [hostId], references: [id])
+  checkAttend           AttendingTour[]
+}
+
+model Games {
+  id        Int                 @id @default(autoincrement())
+  gameName  String              @map("game_name") @db.VarChar(100)
+  gamesLink PlatformWithGames[]
+}
+
+model Platform {
+  id           Int                 @id @default(autoincrement())
+  platformName String              @map("platform_name") @db.VarChar(100)
+  platformLink PlatformWithGames[]
+}
+
+model PlatformWithGames {
+  id                    Int      @id @default(autoincrement())
+  gameId                Int      @map("game_id")
+  games                 Games    @relation(fields: [gameId], references: [id])
+  platformId            Int      @map("platform_id")
+  platform              Platform @relation(fields: [platformId], references: [id])
+  platformWithGamesLink Host[]
+}
+
+model TeamInformation {
+  id            Int             @id @default(autoincrement())
+  teamLeadId    Int             @map("team_lead_id")
+  userTeamLead  User            @relation(fields: [teamLeadId], references: [id])
+  playerNames   String          @map("player_names") @db.VarChar(100)
+  attendingTour AttendingTour[]
+}
+
+model AttendingTour {
+  id        Int             @id @default(autoincrement())
+  teamId    Int             @map("team_id")
+  teamsInfo TeamInformation @relation(fields: [teamId], references: [id])
+  tourId    Int             @map("tour_id")
+  host      Host            @relation(fields: [tourId], references: [id])
+  deletedAt DateTime?       @map("deleted_at")
+}
