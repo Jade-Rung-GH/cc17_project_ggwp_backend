@@ -7,7 +7,6 @@ const authController = {};
 
 authController.register = async (req, res, next) => {
   try {
-    console.log("====================");
     // req.input password
     const data = req.input;
     const existUser = await userService.findUserByUsername(data.username);
@@ -18,9 +17,8 @@ authController.register = async (req, res, next) => {
         statusCode: 400,
       });
     }
-    console.log("------------------------");
 
-    console.log(data);
+    // console.log(data);
     data.password = await hashService.hash(data.password);
     await userService.createUser(data);
     res.status(201).json({ message: "User Created" });
