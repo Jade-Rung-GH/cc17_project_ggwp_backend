@@ -16,9 +16,9 @@ datasource db {
 model User {
   id              Int               @id @default(autoincrement())
   username        String            @unique @db.VarChar(50)
-  password        String            @db.VarChar(50)
+  password        String            @db.VarChar(100)
   email           String            @unique
-  phone           String            @unique @db.VarChar(100)
+  phone           String?           @unique @db.VarChar(100)
   warning         Int               @default(0)
   hosts           Host[]
   teamInformation TeamInformation[]
