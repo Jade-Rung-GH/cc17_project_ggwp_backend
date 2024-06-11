@@ -12,10 +12,11 @@ exports.registerSchema = Joi.object({
   confirmPassword: Joi.string().valid(Joi.ref("password")).required().strip(),
 
   phone: Joi.string()
+    .allow("")
     .optional()
     .pattern(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/),
 
-  email: Joi.string().email({ tlds: false }),
+  email: Joi.string().required().email({ tlds: false }),
 });
 
 exports.loginSchema = Joi.object({

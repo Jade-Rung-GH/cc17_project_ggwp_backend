@@ -7,6 +7,7 @@ const authController = {};
 
 authController.register = async (req, res, next) => {
   try {
+    console.log(req.body);
     // req.input password
     const data = req.input;
     const existUser = await userService.findUserByUsername(data.username);
