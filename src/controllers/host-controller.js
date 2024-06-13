@@ -1,38 +1,8 @@
 const tournamentService = require("../services/host-service");
 
-exports.hostTournament = async (req, res, next) => {
-  const {
-    platformWithGameId,
-    teamOrNot,
-    teamAmount,
-    teamLimit,
-    prizePool,
-    addressOrOnline,
-    rules,
-    tourPassword,
-    startTour,
-    endTour,
-    registrationStartDate,
-    registrationEndDate,
-    hostId,
-  } = req.body;
-
+exports.hostTournament = async (req, res) => {
   try {
-    const tournament = await tournamentService.createTournament({
-      platformWithGameId,
-      teamOrNot,
-      teamAmount,
-      teamLimit,
-      prizePool,
-      addressOrOnline,
-      rules,
-      tourPassword,
-      startTour: new Date(startTour),
-      endTour: new Date(endTour),
-      registrationStartDate: new Date(registrationStartDate),
-      registrationEndDate: new Date(registrationEndDate),
-      hostId,
-    });
+    const tournament = await tournamentService.createTournament(req.body);
     res.status(201).json(tournament);
   } catch (error) {
     res.status(400).json({ error: error.message });
