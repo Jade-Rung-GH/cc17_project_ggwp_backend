@@ -6,16 +6,18 @@ const notFoundMiddleware = require("./middlewares/not-found");
 const authRouter = require("./routers/auth-route");
 const platformRouter = require("./routers/platform-route");
 const hostRouter = require("./routers/host-route");
-
+const morgan = require("morgan");
+const attendRouter = require("./routers/attend-route");
 const app = express();
 
 app.use(express.json()); // can accept req.body
 
 app.use(cors());
+app.use(morgan("dev"));
 app.use("/auth", authRouter);
 app.use("/games", platformRouter);
 app.use("/host", hostRouter);
-app.use("/attend", () => {});
+app.use("/attend", attendRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);

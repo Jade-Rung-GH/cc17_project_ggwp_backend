@@ -20,4 +20,34 @@ userService.updateUserById = (data, userId) =>
     data,
   });
 
+userService.updateUserPassword = (userId, newPassword) =>
+  prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      password: newPassword,
+    },
+  });
+
+userService.updateUserEmail = (userId, newEmail) =>
+  prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      email: newEmail,
+    },
+  });
+
+userService.updateUserPhoneNumber = (userId, newPhoneNumber) =>
+  prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      phone: newPhoneNumber,
+    },
+  });
+
 module.exports = userService;
